@@ -54,11 +54,11 @@ function render() {
       card.setAttribute('data-testid', 'entity-card');
       card.className = 'book-card';
       card.innerHTML = `
-        <h4>${book.title}</h4>
+        <h4>${book.name}</h4>
         <p><strong>Автор:</strong> ${book.author}</p>
         <p><strong>Год:</strong> ${book.year}</p>
         <p><strong>Жанр:</strong> ${book.genre}</p>
-        <button data-testid="delete-entity" data-title="${book.title}" data-lib="${lib.name}">Удалить</button>
+        <button data-testid="delete-entity" data-name="${book.name}" data-lib="${lib.name}">Удалить</button>
       `;
       booksContainer.appendChild(card);
     });
@@ -80,7 +80,7 @@ document
     const formData = new FormData(e.target);
 
     const book = {
-      title: formData.get('title'),
+      name: formData.get('name'),
       author: formData.get('author'),
       year: Number(formData.get('year')),
       genre: formData.get('genre'),
@@ -116,14 +116,14 @@ document
   .querySelector('[data-testid="entity-list"]')
   .addEventListener('click', async (e) => {
     if (e.target.getAttribute('data-testid') === 'delete-entity') {
-      const title = e.target.getAttribute('data-title');
+      const name = e.target.getAttribute('data-name');
       const libName = e.target.getAttribute('data-lib');
 
       await delay(300);
 
       const lib = libraries.find((l) => l.name === libName);
       if (lib) {
-        lib.removeBook(title);
+        lib.removeBook(name);
         render();
       }
     }

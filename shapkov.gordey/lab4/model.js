@@ -8,8 +8,8 @@ export class Library {
     this.books.push(book);
   }
 
-  removeBook(title) {
-    this.books = this.books.filter((book) => book.title !== title);
+  removeBook(name) {
+    this.books = this.books.filter((book) => book.name !== name);
   }
 
   get booksCount() {
@@ -59,7 +59,7 @@ export function getUniqueYears(libraries) {
   return Array.from(years).sort((a, b) => a - b);
 }
 
-export function getBooksByAuthor(libraries, author) {
+export function findBooksByAuthor(libraries, author) {
   const result = [];
   libraries.forEach((lib) => {
     lib.books.forEach((book) => {
