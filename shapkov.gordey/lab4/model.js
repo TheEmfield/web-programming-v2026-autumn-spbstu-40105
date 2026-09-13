@@ -8,8 +8,8 @@ export class Library {
     this.books.push(book);
   }
 
-  removeBook(name) {
-    this.books = this.books.filter((book) => book.name !== name);
+  removeBook(title) {
+    this.books = this.books.filter((book) => book.title !== title);
   }
 
   get booksCount() {

@@ -25,6 +25,7 @@ function updateLibrarySelect() {
   if (!select) {
     return;
   }
+  const currentValue = select.value;
   select.innerHTML = '';
   libraries.forEach((lib) => {
     const option = document.createElement('option');
@@ -32,6 +33,9 @@ function updateLibrarySelect() {
     option.textContent = lib.name;
     select.appendChild(option);
   });
+  if (currentValue && libraries.some((l) => l.name === currentValue)) {
+    select.value = currentValue;
+  }
 }
 
 function render() {
@@ -54,11 +58,11 @@ function render() {
       card.setAttribute('data-testid', 'entity-card');
       card.className = 'book-card';
       card.innerHTML = `
-        <h4>${book.name}</h4>
-        <p><strong>Автор:</strong> ${book.author}</p>
-        <p><strong>Год:</strong> ${book.year}</p>
-        <p><strong>Жанр:</strong> ${book.genre}</p>
-        <button data-testid="delete-entity" data-name="${book.name}" data-lib="${lib.name}">Удалить</button>
+        <h4>${book.title}</h4>
+        <p><strong>Автор:</strong> ${book.author || '—'}</p>
+        <p><strong>Год:</strong> ${book.year || '—'}</p>
+        <p><strong>Жанр:</strong> ${book.genre || '—'}</p>
+        <button data-testid="delete-entity" data-title="${book.title}" data-lib="${lib.name}">Удалить</button>
       `;
       booksContainer.appendChild(card);
     });
@@ -80,15 +84,15 @@ document
     const formData = new FormData(e.target);
 
     const book = {
-      name: formData.get('name'),
+      title: formData.get('name'),
       author: formData.get('author'),
-      year: Number(formData.get('year')),
+      year: formData.get('year') ? Number(formData.get('year')) : undefined,
       genre: formData.get('genre'),
     };
 
     await delay(300);
 
-    const targetLibName = formData.get('libraryName') || libraries[0].name;
+    const targetLibName = formData.get('libraryName') || libraries[0]?.name;
     const lib = libraries.find((l) => l.name === targetLibName);
 
     if (lib) {
@@ -116,17 +120,18 @@ document
   .querySelector('[data-testid="entity-list"]')
   .addEventListener('click', async (e) => {
     if (e.target.getAttribute('data-testid') === 'delete-entity') {
-      const name = e.target.getAttribute('data-name');
+      const title = e.target.getAttribute('data-title');
       const libName = e.target.getAttribute('data-lib');
 
       await delay(300);
 
       const lib = libraries.find((l) => l.name === libName);
       if (lib) {
-        lib.removeBook(name);
+        lib.removeBook(title);
         render();
       }
     }
+
     if (e.target.getAttribute('data-testid') === 'delete-library') {
       const libName = e.target.getAttribute('data-lib-name');
 
