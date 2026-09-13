@@ -82,8 +82,12 @@ button:hover {
   color: #555;
 }
 
-[data-testid='delete-entity'] {
+[data-testid='delete-entity'],
+[data-testid='delete-library'] {
   background-color: #f44;
+}
+
+[data-testid='delete-entity'] {
   margin-top: 10px;
   width: 100%;
 }
@@ -92,14 +96,7 @@ button:hover {
   background-color: #c00;
 }
 
-.separator {
-  margin: 20px 0;
-  border: 0;
-  border-top: 1px solid #ccc;
-}
-
 [data-testid='delete-library'] {
-  background-color: #f44;
   margin-left: 10px;
   font-size: 12px;
   padding: 4px 8px;
@@ -107,4 +104,10 @@ button:hover {
 
 [data-testid='delete-library']:hover {
   background-color: #c00;
+}
+
+.separator {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #ccc;
 }
