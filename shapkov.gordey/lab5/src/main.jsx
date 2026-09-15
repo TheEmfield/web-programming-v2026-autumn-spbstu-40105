@@ -10,7 +10,7 @@ const INITIAL_BOOKS = [
     rating: 4.8,
     price: 850,
     description: 'Эпическая научная фантастика о пустынной планете.',
-    cover: '',
+    cover: '/dune.jpg',
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const INITIAL_BOOKS = [
     rating: 4.7,
     price: 600,
     description: 'Знаменитый антиутопический роман Джорджа Оруэлла.',
-    cover: '📗',
+    cover: '/1984.jpg',
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const INITIAL_BOOKS = [
     rating: 4.5,
     price: 1200,
     description: 'Создание, анализ и рефакторинг программного обеспечения.',
-    cover: '📘',
+    cover: 'cleancode.jpg',
   },
   {
     id: 4,
@@ -35,7 +35,7 @@ const INITIAL_BOOKS = [
     price: 900,
     description:
       'Иллюстрированное пособие для программистов и любопытствующих.',
-    cover: '📙',
+    cover: '/tanenbaum.jpg',
   },
 ];
 
@@ -123,7 +123,7 @@ function App() {
       <div className="book-list">
         {sortedBooks.map((book) => (
           <div key={book.id} data-testid="book-card" className="book-card">
-            <div className="book-cover">{book.cover}</div>
+            <img src={book.cover} alt={book.title} className="book-cover" />
             <div className="book-info">
               <h3>{book.title}</h3>
               <p className="book-description">{book.description}</p>

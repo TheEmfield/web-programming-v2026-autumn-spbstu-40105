@@ -68,14 +68,11 @@ body {
 }
 
 .book-cover {
-  font-size: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 60px;
-  height: 80px;
-  background-color: #f9f9f9;
+  height: 90px;
+  object-fit: cover;
   border-radius: 4px;
+  background-color: #f9f9f9;
 }
 
 .book-info {
