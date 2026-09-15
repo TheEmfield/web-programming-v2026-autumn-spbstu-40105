@@ -2,6 +2,10 @@ import {useState, useMemo} from 'react';
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import './styles.css';
+import duneCover from '../assets/dune.jpg';
+import book1984Cover from '../assets/1984.jpg';
+import cleanCodeCover from '../assets/cleancode.jpg';
+import tanenbaumCover from '../assets/tanenbaum.jpg';
 
 const INITIAL_BOOKS = [
   {
@@ -10,7 +14,7 @@ const INITIAL_BOOKS = [
     rating: 4.8,
     price: 850,
     description: 'Эпическая научная фантастика о пустынной планете.',
-    cover: '/dune.jpg',
+    cover: duneCover,
   },
   {
     id: 2,
@@ -18,7 +22,7 @@ const INITIAL_BOOKS = [
     rating: 4.7,
     price: 600,
     description: 'Знаменитый антиутопический роман Джорджа Оруэлла.',
-    cover: '/1984.jpg',
+    cover: book1984Cover,
   },
   {
     id: 3,
@@ -26,7 +30,7 @@ const INITIAL_BOOKS = [
     rating: 4.5,
     price: 1200,
     description: 'Создание, анализ и рефакторинг программного обеспечения.',
-    cover: 'cleancode.jpg',
+    cover: cleanCodeCover,
   },
   {
     id: 4,
@@ -35,7 +39,7 @@ const INITIAL_BOOKS = [
     price: 900,
     description:
       'Иллюстрированное пособие для программистов и любопытствующих.',
-    cover: '/tanenbaum.jpg',
+    cover: tanenbaumCover,
   },
 ];
 
