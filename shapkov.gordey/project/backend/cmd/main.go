@@ -19,7 +19,7 @@ func main() {
 	e.GET("/orders", handlers.GetOrders)
 	e.POST("/orders", handlers.CreateOrder)
 
-	log.Println("Backend сервер запущен на порту :8080")
+	log.Println("Backend:8080")
 	if err := e.Start(":8080"); err != nil {
 		log.Fatalf("Ошибка запуска сервера: %v", err)
 	}
