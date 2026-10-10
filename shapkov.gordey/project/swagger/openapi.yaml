@@ -15,8 +15,8 @@ paths:
             schema:
               type: object
               properties:
-                username: { type: string, example: "user" }
-                password: { type: string, example: "password" }
+                username: {type: string, example: 'user'}
+                password: {type: string, example: 'password'}
       responses:
         '200':
           description: Успешный вход
@@ -25,15 +25,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  token: { type: string }
-                  username: { type: string }
+                  token: {type: string}
+                  username: {type: string}
         '401':
           description: Неверные данные
   /logout:
     post:
       summary: Завершение сессии
       responses:
-        '200': { description: Успешный выход }
+        '200': {description: Успешный выход}
   /goods:
     get:
       summary: Получить список всех товаров
@@ -47,13 +47,13 @@ paths:
                 items:
                   type: object
                   properties:
-                    id: { type: integer }
-                    name: { type: string }
-                    price: { type: number }
-                    category: { type: string }
-                    color: { type: string }
-                    labels: { type: array, items: { type: string } }
-                    image: { type: string }
+                    id: {type: integer}
+                    name: {type: string}
+                    price: {type: number}
+                    category: {type: string}
+                    color: {type: string}
+                    labels: {type: array, items: {type: string}}
+                    image: {type: string}
   /orders:
     get:
       summary: Получить историю заказов
@@ -75,10 +75,10 @@ paths:
             schema:
               type: object
               properties:
-                items: { type: array }
-                total: { type: number }
-                phone: { type: string }
-                delivery: { type: boolean }
-                address: { type: string }
+                items: {type: array}
+                total: {type: number}
+                phone: {type: string}
+                delivery: {type: boolean}
+                address: {type: string}
       responses:
-        '201': { description: Заказ создан }
+        '201': {description: Заказ создан}

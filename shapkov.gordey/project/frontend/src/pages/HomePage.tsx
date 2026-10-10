@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getGoods } from '../api';
 import Carousel from '../components/Carousel';
+import type { Product } from '../store';
 
 export default function HomePage() {
-  const [goods, setGoods] = useState<any[]>([]);
+  const [goods, setGoods] = useState<Product[]>([]);
 
   useEffect(() => {
     getGoods().then(res => setGoods(res.data));

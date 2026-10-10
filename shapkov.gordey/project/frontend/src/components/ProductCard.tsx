@@ -1,6 +1,7 @@
 import { useStore } from '../store';
+import type { Product } from '../store';
 
-export default function ProductCard({ product, onClick }: { product: any; onClick?: () => void }) {
+export default function ProductCard({ product }: { product: Product }) {
   const { addToCart, updateQuantity, cart } = useStore();
   const inCart = cart.find((i) => i.id === product.id);
 
@@ -9,12 +10,12 @@ export default function ProductCard({ product, onClick }: { product: any; onClic
     if (inCart) {
       updateQuantity(product.id, 1);
     } else {
-      addToCart({ id: product.id, name: product.name, price: product.price, image: product.image });
+      addToCart({ id: product.id, name: product.name, price: product.price, image: product.image || '' });
     }
   };
 
   return (
-    <div className="product-card" onClick={onClick}>
+    <div className="product-card" onClick={() => {}}>
       <div className="product-image">
         {product.labels?.includes('Новинка') && <span className="label label-new">Новинка</span>}
         {product.labels?.includes('Хит') && <span className="label label-hit">Хит</span>}

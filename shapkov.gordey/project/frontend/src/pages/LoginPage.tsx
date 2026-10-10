@@ -12,9 +12,14 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: any = {};
-    if (!username) newErrors.username = 'Заполните обязательное поле';
-    if (!password) newErrors.password = 'Заполните обязательное поле';
+    const newErrors: { username?: string; password?: string } = {};
+    
+    if (!username) {
+      newErrors.username = 'Заполните обязательное поле';
+    }
+    if (!password) {
+      newErrors.password = 'Заполните обязательное поле';
+    }
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -25,7 +30,7 @@ export default function LoginPage() {
       const res = await login(username, password);
       storeLogin(res.data.username, res.data.token);
       navigate('/');
-    } catch (err: any) {
+    } catch {
       alert('такого пользователя нет, возможно неправильный логин или пароль - проверьте данные');
     }
   };

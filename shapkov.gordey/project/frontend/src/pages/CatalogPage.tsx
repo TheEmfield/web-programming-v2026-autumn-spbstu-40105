@@ -2,10 +2,11 @@ import { useEffect, useState, useMemo } from 'react';
 import { getGoods } from '../api';
 import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
+import type { Product } from '../store';
 
 export default function CatalogPage() {
-  const [goods, setGoods] = useState<any[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [goods, setGoods] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   
   const [filters, setFilters] = useState({ minPrice: '', maxPrice: '', categories: [] as string[], colors: [] as string[] });
   const [appliedFilters, setAppliedFilters] = useState(filters);
@@ -13,39 +14,47 @@ export default function CatalogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  useEffect(() => { getGoods().then(res => setGoods(res.data)); }, []);
+  useEffect(() => { 
+    getGoods().then(res => setGoods(res.data)); 
+  }, []);
 
-  const categories = useMemo(() => [...new Set(goods.map(g => g.category))], [goods]);
-  const colors = useMemo(() => [...new Set(goods.map(g => g.color))], [goods]);
+  const categories = useMemo(() => [...new Set(goods.map(g => g.category || ''))], [goods]);
+  const colors = useMemo(() => [...new Set(goods.map(g => g.color || ''))], [goods]);
 
   const filtered = useMemo(() => {
     return goods.filter(g => {
-      if (appliedFilters.minPrice && g.price < Number(appliedFilters.minPrice)) return false;
-      if (appliedFilters.maxPrice && g.price > Number(appliedFilters.maxPrice)) return false;
-      if (appliedFilters.categories.length && !appliedFilters.categories.includes(g.category)) return false;
-      if (appliedFilters.colors.length && !appliedFilters.colors.includes(g.color)) return false;
+      if (appliedFilters.minPrice && g.price < Number(appliedFilters.minPrice)) {return false;}
+      if (appliedFilters.maxPrice && g.price > Number(appliedFilters.maxPrice)) {return false;}
+      if (appliedFilters.categories.length && !appliedFilters.categories.includes(g.category || '')) {return false;}
+      if (appliedFilters.colors.length && !appliedFilters.colors.includes(g.color || '')) {return false;}
       return true;
     });
   }, [goods, appliedFilters]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
-    if (sortType === 'priceAsc') arr.sort((a, b) => a.price - b.price);
-    if (sortType === 'priceDesc') arr.sort((a, b) => b.price - a.price);
-    if (sortType === 'rating') arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    if (sortType === 'new') arr.sort((a, b) => b.id - a.id);
+    if (sortType === 'priceAsc') {arr.sort((a, b) => a.price - b.price);}
+    if (sortType === 'priceDesc') {arr.sort((a, b) => b.price - a.price);}
+    if (sortType === 'rating') {arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));}
+    if (sortType === 'new') {arr.sort((a, b) => b.id - a.id);}
     return arr;
   }, [filtered, sortType]);
 
   const totalPages = Math.ceil(sorted.length / itemsPerPage);
   const paginated = sorted.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const toggleFilter = (list: string[], setList: any, item: string) => {
-    setList(list.includes(item) ? list.filter(i => i !== item) : [...list, item]);
+  const toggleFilter = (key: 'categories' | 'colors', item: string) => {
+    setFilters(prev => {
+      const currentList = prev[key];
+      const newList = currentList.includes(item) 
+        ? currentList.filter(i => i !== item) 
+        : [...currentList, item];
+      return { ...prev, [key]: newList };
+    });
   };
 
   const getPageNumbers = () => {
-    if (totalPages <= 3) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (totalPages <= 3) {return Array.from({ length: totalPages }, (_, i) => i + 1);}
     return [1, 2, 3, '...', totalPages];
   };
 
@@ -64,7 +73,7 @@ export default function CatalogPage() {
             <h4>Категория</h4>
             {categories.map(c => (
               <label key={c} style={{ display: 'block', marginTop: '8px' }}>
-                <input type="checkbox" checked={filters.categories.includes(c)} onChange={() => toggleFilter(filters.categories, (v: any) => setFilters({...filters, categories: v}), c)} /> {c}
+                <input type="checkbox" checked={filters.categories.includes(c)} onChange={() => toggleFilter('categories', c)} /> {c}
               </label>
             ))}
           </div>
@@ -72,7 +81,7 @@ export default function CatalogPage() {
             <h4>Цвет</h4>
             {colors.map(c => (
               <label key={c} style={{ display: 'block', marginTop: '8px' }}>
-                <input type="checkbox" checked={filters.colors.includes(c)} onChange={() => toggleFilter(filters.colors, (v: any) => setFilters({...filters, colors: v}), c)} /> {c}
+                <input type="checkbox" checked={filters.colors.includes(c)} onChange={() => toggleFilter('colors', c)} /> {c}
               </label>
             ))}
           </div>
@@ -95,14 +104,22 @@ export default function CatalogPage() {
             <p style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Товары по вашему запросу не найдены.</p>
           ) : (
             <div className="catalog-grid">
-              {paginated.map(g => <ProductCard key={g.id} product={g} onClick={() => setSelectedProduct(g)} />)}
+              {paginated.map(g => <ProductCard key={g.id} product={g} />)}
             </div>
           )}
 
           {totalPages > 1 && (
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '32px' }}>
               {getPageNumbers().map((p, i) => (
-                <button key={i} className={`btn ${currentPage === p ? 'btn-blue' : 'btn-outline'}`} style={{ minWidth: '40px' }} onClick={() => typeof p === 'number' && setCurrentPage(p)} disabled={p === '...'}>
+                <button 
+                  key={i} 
+                  className={`btn ${currentPage === p ? 'btn-blue' : 'btn-outline'}`} 
+                  style={{ minWidth: '40px' }} 
+                  onClick={() => {
+                    if (typeof p === 'number') {setCurrentPage(p);}
+                  }} 
+                  disabled={p === '...'}
+                >
                   {p}
                 </button>
               ))}
