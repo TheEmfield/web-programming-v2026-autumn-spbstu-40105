@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import {create} from 'zustand';
+import {persist} from 'zustand/middleware';
 
 export interface Product {
   id: number;
@@ -45,33 +45,42 @@ export const useStore = create<StoreState>()(
       user: null,
       token: null,
       cart: [],
-      login: (username, token) => set({ user: username, token }),
-      logout: () => set({ user: null, token: null }),
-      addToCart: (item) => set((state) => {
-        const existing = state.cart.find((i) => i.id === item.id);
-        if (existing) {
-          return { 
-            cart: state.cart.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i) 
+      login: (username, token) => set({user: username, token}),
+      logout: () => set({user: null, token: null}),
+      addToCart: (item) =>
+        set((state) => {
+          const existing = state.cart.find((i) => i.id === item.id);
+          if (existing) {
+            return {
+              cart: state.cart.map((i) =>
+                i.id === item.id ? {...i, quantity: i.quantity + 1} : i,
+              ),
+            };
+          }
+          return {cart: [...state.cart, {...item, quantity: 1}]};
+        }),
+      removeFromCart: (id) =>
+        set((state) => ({
+          cart: state.cart.filter((i) => i.id !== id),
+        })),
+      updateQuantity: (id, delta) =>
+        set((state) => {
+          const existing = state.cart.find((i) => i.id === id);
+          if (!existing) {
+            return state;
+          }
+          const newQty = existing.quantity + delta;
+          if (newQty <= 0) {
+            return {cart: state.cart.filter((i) => i.id !== id)};
+          }
+          return {
+            cart: state.cart.map((i) =>
+              i.id === id ? {...i, quantity: newQty} : i,
+            ),
           };
-        }
-        return { cart: [...state.cart, { ...item, quantity: 1 }] };
-      }),
-      removeFromCart: (id) => set((state) => ({ 
-        cart: state.cart.filter((i) => i.id !== id) 
-      })),
-      updateQuantity: (id, delta) => set((state) => {
-        const existing = state.cart.find((i) => i.id === id);
-        if (!existing) {return state;}
-        const newQty = existing.quantity + delta;
-        if (newQty <= 0) { 
-          return { cart: state.cart.filter((i) => i.id !== id) }; 
-        }
-        return { 
-          cart: state.cart.map((i) => i.id === id ? { ...i, quantity: newQty } : i) 
-        };
-      }),
-      clearCart: () => set({ cart: [] }),
+        }),
+      clearCart: () => set({cart: []}),
     }),
-    { name: 'gadget-hub-storage' }
-  )
+    {name: 'gadget-hub-storage'},
+  ),
 );
